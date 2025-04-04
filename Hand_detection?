@@ -1,0 +1,59 @@
+# -- coding: utf-8 –
+"""
+Created on Tue Nov 21 22:17:26 2023
+@author: cdmor
+"""
+
+import torch
+//Importa una librería de machine learning usada para entrenamiento y manipulación de modelos de redes neuronales.
+from ultralytics import YOLO
+// Importa la clase YOLO de la librería ultralytics, que facilita el uso de modelos YOLO para detección de objetos.
+from IPython.display import display, Image
+// Importa funciones para mostrar imágenes y contenido visual en Jupyter Notebooks.
+from IPython import display
+// Importa utilidades adicionales para manipular la salida en Jupyter Notebooks.
+display.clear_output()
+//Limpia la salida previa en una celda de Jupyter Notebook.
+import ultralytics
+// Importa toda la librería ultralytics
+ultralytics.checks()
+// Verifica que las configuraciones y dependencias necesarias para trabajar con la librería están instaladas correctamente.
+
+import os
+// Importa el módulo os para interactuar con el sistema operativo.
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+// Previene errores relacionados con la librería OpenMP, que puede ocurrir si hay conflictos con dependencias al ejecutar PyTorch.
+
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+// Verifica si una GPU con CUDA está disponible.
+//    Si está disponible, usa 'cuda' (mejor rendimiento).
+//    De lo contrario, usa 'cpu' (procesamiento más lento).
+model = YOLO("yolov8s.yaml")
+//Carga la configuración del modelo YOLOv8 desde el archivo yolov8s.yaml. Este archivo contiene parámetros específicos del modelo, como arquitectura y tamaños de capa.
+PATH='D:/Usuarios/CarlosD/Documentos/Universidad/Maestria/Tesis/IA/Test_Hand/dataset/data.yaml'
+// Se especifica la dirección donde se encuentra el dataset etiquetado 
+
+
+model.train(data=PATH,
+// Especifica el archivo YAML con la configuración de los datos.
+            epochs=500,
+// Entrena durante 500 épocas.
+            patience=100,
+// Deja de entrenar si no hay mejoras en 100 épocas consecutivas.
+            imgsz=640,
+// Ajusta el tamaño de las imágenes a 640x640 píxeles.
+            batch=32,
+// Número de imágenes procesadas simultáneamente durante el entrenamiento.
+            workers=0,
+// Número de subprocesos para cargar datos (0 significa usar el proceso principal).
+            flipud=0.2, # image flip up-down (probability)
+// Probabilidad de voltear las imágenes verticalmente.
+            fliplr=0.5,  # image flip left-right (probability)
+// Probabilidad de voltear las imágenes horizontalmente.
+            degrees=90,
+// Rotación máxima de 90 grados para las imágenes durante la data augmentation.
+            device = 'cuda' if torch.cuda.is_available() else 'cpu',
+// Usa GPU si está disponible; de lo contrario, CPU.
+            name='Hand_s500-i640-b32-rot-up_down')
+// Nombre del experimento para identificar resultados y configuraciones.
