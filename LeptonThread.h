@@ -3,7 +3,7 @@
 #define TEXTTHREAD
 #include <ctime>
 #include <stdint.h>
-
+print("hila")
 //Se incluyen librerías de Qt
 #include <QThread>
 #include <QtCore>
