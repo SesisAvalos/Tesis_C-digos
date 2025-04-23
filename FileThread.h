@@ -1,49 +1,62 @@
+//Se realiza un inclue guard, evita que la cabecera se incluya más de una vez
+#ifndef TXTTHREAD
+#define TXTTHREAD
+
+//Se incluyen librerías
+#include <ctime>
+#include <stdint.h>
+#include <cstdio> // For popen()
+#include <thread>
+#include <string>
+
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <iostream>
-//Se incluye FileThread.h
-#include "FileThread.h"
 
-//Se crea el constructor y destructor de la clase FileThread
-FileThread::FileThread() : QThread(){
-}
+//Se incluyen librerías de Qt
+#include <QString>
+#include <QDir>
+#include <QThread>
+#include <QFile>
+#include <QTextStream>
+#include <QVector>
 
-FileThread::~FileThread() {
-}
+#include <QProcess>
+#include <QByteArray>
 
-void FileThread::setFile(){file.setFileName(Dir);}
+#include <QDebug>
 
-//Esta función guarda los datos de la imagen en un archivo como una matriz. El arreglo tempImage contiene los datos de la imagen en escala de grises 
-void FileThread::saveMatrix(QVector<int> tempImage){
-	if( file.open(QIODevice::WriteOnly))
-	{
-		QTextStream Stream(&file);.
-		for( int i=1;i<19201; i++){
-			Stream<<tempImage[i-1];
-			if(i%160==0) Stream <<"\n";
-			else Stream<<",";
-		}
-	file.close();.
-	}
-}
+//Se crea la clase FileThread, esta se ejecuta en un hilo separado 
+class FileThread : public QThread
+{
+  Q_OBJECT;
+//Se definen variables públicas
+public:
+  FileThread(); //Se crea el constructor
+  ~FileThread(); //Se crea el destructor
+  
+  void setFile();
+  void createFile();
+  bool pythonAI=true;
 
+//Se declaran los slots, estos son funciones en Qt que se llaman en respuesta a señales
+public slots:
+  void GetImage();  
+  void saveMatrix(QVector<int> tempImage);
+  
+//Se crean los parámetros privados
+private slots:
+   
+signals:
+  void readyBBox();
 
-//Se verifica si pythonAI es verdadero o falso
-void FileThread::GetImage()
-{	if(pythonAI){
-		 // Create a QProcess instance to run the Python script
-        QProcess *process = new QProcess(this);
-        QString program = "python";
-        QStringList arguments = {"Hand_predict_Grayscale.py"};
+private:
+  QString Dir =  QString("/home/Thermal_Camera/AI_Temps.csv");
+  QFile file;
+  QVector<int> tempsImage;
+  
+};
 
-        process->start(program, arguments);     
-	}
-	else{
-		if (!file.exists()) {
-			qDebug() << "Error: File does not exist.";
-		} else {
-			if (!file.remove()) {
-				qDebug() << "Error: Unable to remove the file.";
-			}
-		}
-	} 
-}
-
+#endif
