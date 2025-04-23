@@ -2,11 +2,9 @@
 //Se incluye FileThread.h
 #include "FileThread.h"
 
-//Se crea el constructor de la clase FileThread
+//Se crea el constructor y destuctor de la clase FileThread
 FileThread::FileThread() : QThread(){
 }
-
-//Se crea el destructor de la clase FileThread
 FileThread::~FileThread() {
 }
 
@@ -31,7 +29,7 @@ void FileThread::GetImage()
 {	if(pythonAI){
         QProcess *process = new QProcess(this);
         QString program = "python";
-        QStringList arguments = {"Hand_predict_Grayscale.py"};
+        QStringList arguments = {"Hand_predict_Grayscale.py"}; //Se ejecuta el código "Hand..." en python
 
         process->start(program, arguments);     
 	}
