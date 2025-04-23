@@ -19,10 +19,7 @@ void LEP_PerformFFC() {
 
 }
 
-///////////////////////////////////////////////////////////////////////
-////////////////////// Get Config //////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
+//PARA Get Config 
 //Se obtienen los parámetros de radiometría
 void LEP_GetRadParms(LEP_RAD_FLUX_LINEAR_PARAMS_T_PTR Radiometry){
 	if(!_connected) {
@@ -52,9 +49,7 @@ void LEP_GetAGCConfig(LEP_AGC_ROI_T_PTR agcROI, LEP_UINT16 *agcHeqClipLimitHigh,
 }
 
 
-///////////////////////////////////////////////////////////////////////
-////////////////////// Basic Config //////////////////////////////////
-////////////////////////////////////////////////////////////////////
+//PARA Basic Config
 //Se calcula el valor de la emisividad 
 //Se corrigen las mediciones de temperatura de la cámara de acuerdo al material que observa
 void LEP_SetEmissivity(LEP_RAD_FLUX_LINEAR_PARAMS_T Radiometry, float emissivity){
@@ -175,9 +170,7 @@ void LEP_SetShutter(int option){
 	LEP_SetSysFfcShutterModeObj( &_port, gainModeObj);
 }
 
-///////////////////////////////////////////////////////////////////////
-////////////////////// ROI Config //////////////////////////////////
-////////////////////////////////////////////////////////////////////
+//PARA ROI Config
 //Se configuran las zonas re interés (ROI) 
 void LEP_SetROI(LEP_SYS_VIDEO_ROI_T ROI, LEP_RAD_ROI_T ROI_1){
 	if(!_connected) {
@@ -195,10 +188,7 @@ void LEP_ROIStatistics(LEP_SYS_SCENE_STATISTICS_T_PTR ROI_Stats,LEP_RAD_SPOTMETE
 	LEP_GetRadSpotmeterObjInKelvinX100(&_port, ROI_Stats_1); //Se obtienen las mediciones térmicas de un área (en Kelvin multiplicado por 100)
 }
 
-///////////////////////////////////////////////////////////////////////
-////////////////////// Advanced Config //////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
+//PARA Advanced Config
 void LEP_SetRadParms(LEP_RAD_FLUX_LINEAR_PARAMS_T Radiometry){
 	if(!_connected) {
 		LEP_Connect();
