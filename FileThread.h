@@ -5,7 +5,7 @@
 //Se incluyen librerías
 #include <ctime>
 #include <stdint.h>
-#include <cstdio> // For popen()
+#include <cstdio>
 #include <thread>
 #include <string>
 
