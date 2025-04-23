@@ -7,7 +7,7 @@
 #include "SPI.h"
 //Se incluye LEPTON_CONFIG.h
 #include "LEPTON_CONFIG.h"
-print("hola")
+
 //Se definen las variables globales necesarias para la decodificación de video
 #define PACKET_SIZE 164
 #define PACKET_SIZE_UINT16 (PACKET_SIZE/2)
