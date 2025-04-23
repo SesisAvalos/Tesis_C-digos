@@ -2,11 +2,10 @@
 //Se incluye FileThread.h
 #include "FileThread.h"
 
-//Se crea el constructor de la clase FileThread
+//Se crea el constructor y destructor de la clase FileThread
 FileThread::FileThread() : QThread(){
 }
 
-//Se crea el destructor de la clase FileThread
 FileThread::~FileThread() {
 }
 
