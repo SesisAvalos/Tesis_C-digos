@@ -39,7 +39,6 @@ public:
     MyWidget(QWidget *parent = nullptr) : QWidget(parent) {}
 
 protected:
-    // Override the close event
     void closeEvent(QCloseEvent *event) override {
 	QString Dir =  QString("/home/Thermal_Camera/AI_Temps.csv");
 	QFile file(Dir); 
@@ -47,11 +46,6 @@ protected:
      if (!file.remove()) {}
 	}
 	event->accept();}
-    
-//public slots:
-	//void TestLabel(QImage image){TempsImage=image;}
-//public:
-	//QImage TempsImage;
 };
 
 //Se declaran dos punteros, thread y file, que apuntaran a objetos de las clases LeptonThread y FileThread respectivamente.
@@ -63,7 +57,7 @@ LEP_RAD_FLUX_LINEAR_PARAMS_T Radiometry;
 
 //Variable para los modos de ganancia del sistema de la camara termica FLIR
 LEP_SYS_GAIN_MODE_OBJ_T gainModeObj;
-.
+
 //Variable de información relacionada con la región de interés específica para el control automático de ganancia en una cámara FLIR.
 LEP_AGC_ROI_T agcROI; 
 
@@ -111,29 +105,25 @@ int main( int argc, char **argv )
 
 		QProcess process;
 		process.start(command);
-		process.waitForFinished(-1); // Wait for the process to finish
+		process.waitForFinished(-1); 
 
 		int exitCode = process.exitCode();
 		if (exitCode != 0) {
 		qDebug() << "Failed to create folder for AI Exit code:" << exitCode;
-		// Handle error
 		} else {
 		qDebug() << "Folder created for AI successfully!";
-		// Continue with your application 
 		}
 		
 		command = "sudo chmod  a+rw /home/Thermal_Camera" ;
 
 		process.start(command);
-		process.waitForFinished(-1); // Wait for the process to finish
+		process.waitForFinished(-1);
 
 		exitCode = process.exitCode();
 		if (exitCode != 0) {
 		qDebug() << "Writing permission denied" << exitCode;
-		// Handle error
 		} else {
 		qDebug() << "Writing permission granted";
-		// Continue with your application 
 		}
 	}
 
@@ -145,7 +135,7 @@ int main( int argc, char **argv )
 
 		QProcess process;
 		process.start(command);
-		process.waitForFinished(-1); // Wait for the process to finish
+		process.waitForFinished(-1);
 
 		int exitCode = process.exitCode();
 		if (exitCode != 0) {
@@ -156,7 +146,7 @@ int main( int argc, char **argv )
 		command = "sudo chmod  a+rw /home/Thermal_Camera/patients" ;
 
 		process.start(command);
-		process.waitForFinished(-1); // Wait for the process to finish
+		process.waitForFinished(-1);
 
 		exitCode = process.exitCode();
 		if (exitCode != 0) {
@@ -328,7 +318,7 @@ int main( int argc, char **argv )
 	config->setGeometry(680, 310, 100, 30);
 //Se crea una casilla deverificación para AutoRange
 	QCheckBox *autoRange = new QCheckBox("Auto Range",myWidget);
-    autoRange->setChecked(true); //Set the initial state (checked)
+    autoRange->setChecked(true); 
     autoRange->setGeometry(680, 105, 110, 30);
 	
 //Se crea una casilla de verificación para Advanced
@@ -340,7 +330,6 @@ int main( int argc, char **argv )
 	QLineEdit *Nombre = new QLineEdit(myWidget);
 	Nombre->setStyleSheet("QLineEdit { width: 250px; height: 20px; }");
 	Nombre->move(80,500);
-	//label for the text box or the name
 	QLabel *Name = new QLabel("Name: ",myWidget);
 	Name->setGeometry(20,500,50,20);
 	
@@ -377,7 +366,7 @@ sliderMin->setStyleSheet(
 		"QSlider::groove:vertical {"
 		"	border: 1px solid #bbb;"
 		"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 red, stop:1 blue);"
-		//"	backgroung: transparent;"
+	
 		"	width: 10px;"
 		"	border-radius: 5px;"
 		"}"
@@ -395,7 +384,7 @@ sliderMin->setStyleSheet(
 		"QSlider::groove:vertical {"
 		"	border: 1px solid #bbb;"
 		"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 red, stop:1 blue);"
-		//"	backgroung: transparent;"
+	
 		"	width: 10px;"
 		"	border-radius: 5px;"
 		"}"
@@ -445,13 +434,6 @@ sliderMin->setStyleSheet(
 
 	//Se conecta la imagen del sensor a la pantalla principal y la muestra
 		QObject::connect(thread, SIGNAL(updateImage(QImage)), &myLabel, SLOT(setImage(QImage)));
-
-	//QObject::connect(thread, &LeptonThread::updateImage, myWidget, &MyWidget::TestLabel);
-	//QObject::connect(thread, &LeptonThread::updateImage, [&](){
-		//if(!myWidget->TempsImage.isNull())
-	//	myLabel.setPixmap(QPixmap::fromImage(myWidget->TempsImage.scaled(myLabel.width(),myLabel.height(),Qt::KeepAspectRatio)));
-	//	});
-// COMENTARIOS DE CONEXIONES ALTERNATIVAS
 
 	QObject::connect(AI, SIGNAL(clicked()), thread, SLOT(startAI()));
 	QObject::connect(AI, SIGNAL(clicked()), file, SLOT(GetImage()));
@@ -523,7 +505,7 @@ Cuadros->setText(Count);
 	QObject::connect(button5, &QPushButton::clicked, [&](){	
 
 		if (thread->Datos(Nombre->text(),Cuadros->text().toUInt(), Tiempo->text().toUInt()))
-// lama al método Datos() del objeto thread. Si los datos son correctos, se muestra un cuadro de diálogo con un mensaje de "Información correcta". Si los datos son incorrectos, se muestra un mensaje de "Error".
+// Llama al método Datos() del objeto thread. Si los datos son correctos, se muestra un cuadro de diálogo con un mensaje de "Información correcta". Si los datos son incorrectos, se muestra un mensaje de "Error".
 			QMessageBox::information(nullptr,"Information","Correct");
 		else QMessageBox::critical(nullptr,"Error","Invalid Name");
 		// Detiene el temporizador
@@ -541,7 +523,6 @@ if(!Adv) configWidget->show();
 QObject::connect(autoRange, &QCheckBox::stateChanged, [&](bool state) {
 // Si state es verdadero, se habilita el rango automático llamando a setAutomaticScalingRange() en el objeto thread.
         if (state) {
-            //setAutorange
 thread->setAutomaticScalingRange();
 // Si rangeMin y rangeMax son mayores o iguales a 0, se ajustan los valores mínimo y máximo del rango de escalado automático 
 		if (0 <= rangeMin) thread->useRangeMinValue(rangeMin);
@@ -651,7 +632,6 @@ colorMap->addItem("Ironblack");
 	shutterLabel->setGeometry(10,130,100,20);
 
 
-	//Create text box to intriduce the name
 	//Widget de entrada de texto que permite al usuario escribir texto.
 	QLineEdit *emiBox = new QLineEdit(configWidget);
 
@@ -689,10 +669,8 @@ thread->useColormap(typeColormap);
 		}
 else{
 // Si el formato de salida no es 2, se utilizan los valores Temp[0] y Temp[1] para establecer el rango mínimo y máximo en el hilo.
-			//update temps for different output value
 			thread->useRangeMinValue(Temp[0]);
-			thread->useRangeMaxValue(Temp[1]);
-			
+			thread->useRangeMaxValue(Temp[1]);			
 		}
 
 // Si el formato de salida es 2, se establece el formato de Auto Gain Control (AGC) usando el valor basicConfig[1].	
@@ -835,7 +813,6 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
         layout_Emiss->addWidget(label, (i % 4) * 2, i / 4 );
         layout_Emiss->addWidget(lineEdit, (i % 4) * 2 + 1, i / 4);
 // Coloca el campo de texto justo debajo de su correspondiente etiqueta.
-        // Add the QLineEdit to the container
         lineEdits_Emiss.append(lineEdit);
 	labels_Emiss.append(label);
     }
@@ -1045,9 +1022,7 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 			QStringList numbersList = line.split(" ");
 
 			for (const QString& number : numbersList) {
-				//qDebug() << number.toInt(); // Convert QString to int and output
 				array[buff]=number.toInt();
-				//qDebug()<<array[buff];
 				buff++;
 			}
 		}
@@ -1073,12 +1048,10 @@ for( int i=0;i<8;i+=4)
 		painter.end();
 // Convierte la imagen ROI en un QPixmap y la asigna a la etiqueta myLabel1, actualizando la interfaz gráfica con el nuevo contenido del ROI.
 		myLabel1.setPixmap(QPixmap::fromImage(ROI));
-		//thread->Set_NROI(x1/4,x2/4,y1/4,y2/4);
 	});	
 
 
 ////////////////////////// init congig ////////////// //////////////////
-	//set Format output
 	//Configura el formato de salida de la cámara térmica.
 	LEP_SetOutputFormat(0);
 	//Establece el formato de salida en el hilo thread, usando el mismo formato configurado en la cámara térmica (valor 0).
@@ -1096,5 +1069,3 @@ for( int i=0;i<8;i+=4)
 	myWidget->show();
 	return a.exec();
 }
-
-
