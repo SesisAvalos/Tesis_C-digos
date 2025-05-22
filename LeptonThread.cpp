@@ -188,7 +188,6 @@ void LeptonThread::startAI(){
 
 void LeptonThread::run()
 {
-	//create the initial image
 	myImage = QImage(myImageWidth, myImageHeight, QImage::Format_RGB888);
 	
 	uint16_t minValue = rangeMin;
@@ -201,14 +200,7 @@ void LeptonThread::run()
 	//Se abre el puerto SPI
 	SpiOpenPort(0, spiSpeed);
 
-	/*Infinte loop to get and update the image receive by the sensor
-	 * we need to update all of this variables at start because this varibales can change oer time
-	 * Then, we read the info recieved by SPI in the file system  and store it in result variable,
-	 * after some checks of the image we copy the image into segmentNumber array variable for beter control.
-	 * And finally we swap the segments to get the 16-bit image. 
-	 * Since qt wouldn't allow 16bit image at the time the image has to be reescaled to 8 bit, and send it to
-	 * the main to show it.
-	 */
+	// Ciclo infinito para actualizar la imagen recibida por el sensor
 	while(true) {
 			 const int *colormap = selectedColormap;
 			 const int colormapSize = selectedColormapSize;
@@ -317,7 +309,6 @@ void LeptonThread::run()
 		for(int iSegment = iSegmentStart; iSegment <= iSegmentStop; iSegment++) {
 			int ofsRow = 30 * (iSegment - 1);
 			for(int i=0;i<FRAME_SIZE_UINT16;i++) {
-				//skip the first 2 uint16_t's of every packet, they're 4 header bytes
 				if(i % PACKET_SIZE_UINT16 < 2) {
 					continue;
 				}
@@ -424,13 +415,8 @@ void LeptonThread::saveImage(QString Dir){
 		myImage.save(fileName);	
 }
 
-/* this function is exchangeable with the function before and only add the ROI values to the name.
- * this function is apart because getting the values of the ROI add too
- * much delay and provoke lag in the real time video.
- * To use this function is needed to replace only the name of the function
- * in the correspondin callings and uncomment the roi section at the end
- * of the run function.
- */
+/* Esta función es intercambiable con la función anterior y solo añade los valores de ROI al nombre.
+* Esta función es diferente porque obtener los valores de ROI añade demasiado retraso y provoca retardo en el vídeo en tiempo real.*/
 void LeptonThread::saveImageROI(QString Dir){
 		LEP_ROIStatistics(&ROI_Stats,&ROI_Stats_1);
 		now = QDateTime::currentDateTime();
@@ -449,5 +435,3 @@ void LeptonThread::saveImageROI(QString Dir){
 		}
 		myImage.save(fileName);	
 }
-
-
