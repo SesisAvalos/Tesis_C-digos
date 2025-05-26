@@ -12,7 +12,7 @@
 #include "FileThread.h" 
 #include "MyLabel.h"
 #include "LEPTON_CONFIG.h"
-//Se importan librerías Q
+
 #include <QAbstractButton> 
 #include <QLineEdit>
 #include <QDebug>
@@ -24,7 +24,7 @@
 #include <QGridLayout>
 #include <QMetaType>
 #include <QProcess>
-//Se importan y agregan las librerias necesarias
+
 #include <ctime>
 #include <stdint.h>
 #include <cstdio> 
@@ -94,8 +94,9 @@ void printUsage(char *cmd) {
 }
 
 //Comienza el main
-//Se si un directorio existe, y si no, lo crea y ajusta los permisos para que cualquier usuario pueda leer y escribir en él.
+//Ve si un directorio existe, y si no, lo crea y ajusta los permisos para que cualquier usuario pueda leer y escribir en él.
 int main( int argc, char **argv )
+{
 //Se busca o se crea la carpeta AI
 	file->setFile();
 	QString folderPath = "/home/Thermal_Camera";
@@ -156,14 +157,14 @@ int main( int argc, char **argv )
 		}
 	}
 //Se hace la declaración de la configuración inicial del sensor
-/	 * 
+       / * 
 	 * NOTA: SOLAMENTE SE PUEDEN CAMBIAR EL VALOR DE LAS VARIABLES COLORMAP Y TYPE LEPTON
 	 */
 	int typeColormap=1;// colormap_ironblack
 	int typeLepton = 3; // Lepton 2.x
 	int spiSpeed = 20; // SPI bus speed 20MHz
-	int rangeMin = -1; //
-	int rangeMax = -_1; //
+	int rangeMin = -1; 
+	int rangeMax = -_1; 
 	int loglevel = 0;.
 
 // Se declara un arreglo de tipo entero sin signo de 16 bits, con dos elementos inicializados en 290 y 420
@@ -183,7 +184,6 @@ int main( int argc, char **argv )
 	LEP_GetGainConfig(&gainModeObj);
 //Se obtiene la configuración del control automático de ganancia (AGC)
 	LEP_GetAGCConfig(&agcROI, &agcHeqClipLimitHigh, &agcHeqDampingFactor, &agcHeqLinearPercent);
-
 
 //Se  procesan los argumentos pasados al programa a través de la línea de comandos, permitiendo opciones como -h (para mostrar ayuda), -d (para configurar el nivel de registro), -cm, -tl, -ss (para la velocidad SPI), y los valores mínimo y máximo (-min, -max).
 	for(int i=1; i < argc; i++) {
@@ -238,7 +238,6 @@ int main( int argc, char **argv )
 		}
 	}
 
-
 // Se crea el objeto principal que maneja la aplicacion. Esta linea es esencial en cualquier programa Qt para gestionar la interfaz grafica y el ciclo de eventos.
 // argc y argv son los parámetros que recibe la aplicación desde la línea de comandos. 
 	QApplication a( argc, argv );
@@ -258,7 +257,6 @@ int main( int argc, char **argv )
 	QTabWidget *advConfigWidget = new QTabWidget;
 	advConfigWidget->setGeometry(200, 150, 450, 300);
 
-
 // Se crea un objeto, el formato::Format_RGB888 indica que cada píxel de la imagen tiene 3 componentes (Rojo, Verde y Azul) con 8 bits cada uno
 	QImage myImage;
 	myImage = QImage(160*4, 120*4, QImage::Format_RGB888);
@@ -275,7 +273,6 @@ int main( int argc, char **argv )
 //Se crea el objeto myLabel y se establece su tamaño y posición
 	MyLabel myLabel(myWidget);
 	myLabel.setGeometry(10, 10, 160*4, 120*4);
-
 // Aquí, se convierte el QImage myImage a un QPixmap y se muestra la imagen en el label.
 	myLabel.setPixmap(QPixmap::fromImage(myImage));
 
@@ -298,13 +295,11 @@ int main( int argc, char **argv )
 	button4->setGeometry(680, 240, 100, 30);
 //Se crea el temporizador para el disparo de fotos a cierto tiempo
 	QTimer *timer = new QTimer(myWidget);
-	
 
 //Se crea el botón AI y se le asigna tamaño y posición
 	QPushButton *AI = new QPushButton("Track", myWidget);
 	AI->setGeometry(680, 275, 100, 30);
 	AI->setCheckable(true);
-	//Create a timer to trigger the photo at certain period
 //Se crea el temporizador para el disparo de fotos a cierto tiempo
 	QTimer *AI_timer = new QTimer(myWidget);
 	
@@ -316,6 +311,7 @@ int main( int argc, char **argv )
 //Se crea el botón para abrir la configuración y se le asigna tamaño y posición
 	QPushButton *config = new QPushButton("Config", myWidget);
 	config->setGeometry(680, 310, 100, 30);
+	
 //Se crea una casilla deverificación para AutoRange
 	QCheckBox *autoRange = new QCheckBox("Auto Range",myWidget);
     autoRange->setChecked(true); 
@@ -351,7 +347,7 @@ int main( int argc, char **argv )
 	QLabel *Time = new QLabel("Time: ",myWidget);
 	Time->setGeometry(20,560,50,20);
 
-	//Controles deslizantes verticales definir para máximo y mínimo
+	//Controles deslizantes verticales para máximo y mínimo
 	QSlider *sliderMin = new QSlider(Qt::Vertical,myWidget);
 	QSlider *sliderMax = new QSlider(Qt::Vertical,myWidget);
 	
@@ -428,46 +424,39 @@ sliderMin->setStyleSheet(
 	if (0 <= rangeMin) thread->useRangeMinValue(rangeMin);
 	if (0 <= rangeMax) thread->useRangeMaxValue(rangeMax);
 
-//Se establece el rango automático
-	if (0 <= rangeMin) thread->useRangeMinValue(rangeMin);
-	if (0 <= rangeMax) thread->useRangeMaxValue(rangeMax);
-
 	//Se conecta la imagen del sensor a la pantalla principal y la muestra
 		QObject::connect(thread, SIGNAL(updateImage(QImage)), &myLabel, SLOT(setImage(QImage)));
 
 	QObject::connect(AI, SIGNAL(clicked()), thread, SLOT(startAI()));
 	QObject::connect(AI, SIGNAL(clicked()), file, SLOT(GetImage()));
 // Se conecta el botón de la IA para iniciar el guardado de imágenes en un archivo CSV y comenzar la IA.
-// Conecta la señal clicked() del objeto AI (presumiblemente un botón) al slot startAI() del objeto thread. Cuando el botón de IA es presionado, se ejecuta el método startAI() en el hilo.
+// Conecta la señal clicked() del objeto AI al slot startAI() del objeto thread. Cuando el botón de IA es presionado, se ejecuta el método startAI() en el hilo.
 // Conecta la señal clicked() del mismo botón AI al slot GetImage() del objeto file. Esto indica que al hacer clic en el botón de IA, también se ejecutará el método GetImage() en el objeto file para obtener y posiblemente guardar la imagen.
 
-// Explica que este bloque conecta el botón AI (presumiblemente un botón de la interfaz gráfica) a un temporizador (AI_timer) que actualizará una caja delimitadora (Bounding Box) cada 100 ms. También dice que el temporizador se detiene o arranca dependiendo de su estado, y que se cambiará el estado de la variable pythonAI para empezar o finalizar el código de IA.
-	QObject::connect(AI, &QPushButton::clicked, [&](){	
-// Se usa la función QObject::connect para conectar el evento clicked (cuando el botón AI es clicado) a una función lambda (una función anónima) que ejecuta el código que sigue dentro de {}. Este enfoque es común en Qt cuando se quiere ejecutar un código personalizado directamente.
-		if (AI_timer->isActive()){
-			
+// Se conecta el botón AI a un temporizador (AI_timer) que actualizará una caja delimitadora (Bounding Box) cada 100 ms.
+// Se usa la función QObject::connect para conectar el evento clicked a una función lambda que ejecuta el código que sigue dentro de {}. 
+	QObject::connect(AI, &QPushButton::clicked, [&]()){
+		if (AI_timer->isActive()){			
 			AI_timer->stop();
 		} else {
 			AI_timer->setInterval(100);
 			AI_timer->start();
 		}
-// Si el temporizador está activo, significa que ya se está ejecutando, por lo que lo detiene con AI_timer->stop().
-Si el temporizador no está activo (es decir, está detenido), lo configura para que se ejecute cada 100 ms usando setInterval(100) y lo inicia con AI_timer->start()
+// Si el temporizador está activo, significa que ya se está ejecutando, por lo que lo detiene .
+// Si el temporizador no está activo (es decir, está detenido), lo configura para que se ejecute cada 100 ms
 		file->pythonAI=!(file->pythonAI);
 	});
-// Invierte el estado de la variable pythonAI del objeto file. Si el valor de pythonAI es true, se cambia a false, y viceversa.
-// Esto podría ser para alternar entre ejecutar o detener el código de inteligencia artificial (IA) en Python que probablemente está asociado con la detección de objetos o algún otro procesamiento de imágenes.
+// Invierte el estado de la variable pythonAI del objeto file. Si el valor es true, se cambia a false, y viceversa.
 
-// La imagen (o los datos de la imagen) se enviarán al objeto file para ser guardada en un archivo CSV, que será leído por un script de Python.
+// Las imagenes se enviarán al objeto file para ser guardadas en un archivo CSV, que será leído por un script de Python.
 	QObject::connect(thread, SIGNAL(infereImage(QVector<int>)), file, SLOT(saveMatrix(QVector<int>)));
-
+	
 // Se conecta el evento clicked del botón button4 para iniciar la toma de fotos en un intérvalo de tiempo.
 	QObject::connect(button4, &QPushButton::clicked, [&](){
-
-// Se inicia el temporizador timer con un intervalo definido por thread->Time, multiplicado por 1000 (para convertir segundos a milisegundos).
+// Se inicia el temporizador timer con un intervalo definido, multiplicado por 1000 (para convertir segundos a milisegundos).
 		timer->start((thread->Time)*1000);
-
 		thread->Timed();
+		
 		QString Count = QString::number((thread->Frames));
 		Cuadros->setText(Count);
 	});
@@ -478,7 +467,7 @@ Si el temporizador no está activo (es decir, está detenido), lo configura para
 //Se conecta el botón button2 con la ranura Photo() para realizar la acción de tomar una foto
 	QObject::connect(button2, SIGNAL(clicked()), thread, SLOT(Photo()));
 
-// Conecta el botón button3 con la ranura Video() para realizar la acción de grabar un video cuando se hace clic en el botón.
+// Conecta el botón button3 con la ranura Video() para realizar la acción de grabar un video
 	QObject::connect(button3, SIGNAL(clicked()), thread, SLOT(Video()));
 
 //Se configura el temporizador para tomar fotos periódicas y se actualiza el contador de cuadros.
@@ -505,7 +494,7 @@ Cuadros->setText(Count);
 	QObject::connect(button5, &QPushButton::clicked, [&](){	
 
 		if (thread->Datos(Nombre->text(),Cuadros->text().toUInt(), Tiempo->text().toUInt()))
-// Llama al método Datos() del objeto thread. Si los datos son correctos, se muestra un cuadro de diálogo con un mensaje de "Información correcta". Si los datos son incorrectos, se muestra un mensaje de "Error".
+// Llama al método Datos() del objeto thread. Si los datos son correctos, se muestra un cuadro de diálogo
 			QMessageBox::information(nullptr,"Information","Correct");
 		else QMessageBox::critical(nullptr,"Error","Invalid Name");
 		// Detiene el temporizador
@@ -514,14 +503,14 @@ Cuadros->setText(Count);
 
 	// Conecta el botón config para abrir la ventana de configuración.
 	QObject::connect(config, &QPushButton::clicked, [&](){
-// Si Adv es falso, se muestra la ventana de configuración estándar (configWidget). Si Adv es verdadero, se muestra la ventana de configuración avanzada (advConfigWidget).
+// Si Adv es falso, se muestra la ventana de configuración estándar. Si Adv es verdadero, se muestra la ventana de configuración avanzada.
 if(!Adv) configWidget->show();
 		else advConfigWidget->show();
 	});	
 
 // Se conecta el evento stateChanged del checkbox autoRange. Cuando cambia el estado de la casilla (activada o desactivada), se ejecuta una función lambda.
 QObject::connect(autoRange, &QCheckBox::stateChanged, [&](bool state) {
-// Si state es verdadero, se habilita el rango automático llamando a setAutomaticScalingRange() en el objeto thread.
+// Si state es verdadero, se habilita el rango automático.
         if (state) {
 thread->setAutomaticScalingRange();
 // Si rangeMin y rangeMax son mayores o iguales a 0, se ajustan los valores mínimo y máximo del rango de escalado automático 
