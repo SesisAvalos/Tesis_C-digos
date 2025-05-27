@@ -570,13 +570,13 @@ else {
 	QComboBox *colorMap=new QComboBox(configWidget);
 	// Se le agrega posicion y tamaño
 	colorMap->setGeometry(150,10,100,20);
-	// Se agregan los items a la lista peglable
+	// Se agregan los items a la lista pegable
 	colorMap->addItem("Rainbow");
 	colorMap->addItem("Grayscale");
 colorMap->addItem("Ironblack");
 // Aquí se establece cuál de las opciones estará seleccionada por defecto. setCurrentIndex() (en este caso, "Grayscale")
 	colorMap->setCurrentIndex(typeColormap-1);.
-//Se mostrará un texto que mostrará la etiqueta es "ColorMa:", probablemente abreviatura de "Color Map". 
+//Se mostrará un texto que mostrará la etiqueta es "ColorMa:". 
 	QLabel *Colors = new QLabel("ColorMa:",configWidget);
 //Se le agrega posicion y tamaño 
 	Colors->setGeometry(10,10,100,20);
@@ -623,7 +623,6 @@ colorMap->addItem("Ironblack");
 
 	//Widget de entrada de texto que permite al usuario escribir texto.
 	QLineEdit *emiBox = new QLineEdit(configWidget);
-
 //Se cambia el tamaño de la caja de texto. Define que el ancho sea de 100 píxeles y la altura de 20 píxeles.
 emiBox->setStyleSheet("QLineEdit { width: 100px; height: 20px; }");
 	// Mueve la caja de texto a la posición (150, 160)
@@ -644,11 +643,12 @@ emiBox->setStyleSheet("QLineEdit { width: 100px; height: 20px; }");
 	QMessageBox::information(nullptr,"Information","Correct");
 	//Se configura el colormap
 thread->useColormap(typeColormap);
+		
 // Esta función establece el formato de salida usando el valor almacenado en basicConfig[0].
 		LEP_SetOutputFormat(basicConfig[0]);
 // El formato de salida también se aplica al hilo de ejecución (thread) usando el mismo valor.
 		thread->useOutputFormat(basicConfig[0]);
-// Si el formato de salida es 2, se configuran los valores mínimos y máximos del "slider" (control deslizante) en 0 y 1400 respectivamente.
+// Si el formato de salida es 2, se configuran los valores mínimos y máximos del "slider" en 0 y 1400 respectivamente.
 // También se configuran los valores mínimos y máximos para el rango en el hilo de ejecución.
 		if(basicConfig[0]==2){
 			sliderMin->setValue(0);
@@ -664,15 +664,17 @@ else{
 
 // Si el formato de salida es 2, se establece el formato de Auto Gain Control (AGC) usando el valor basicConfig[1].	
 		if(basicConfig[0]==2) LEP_SetAGCEqu(basicConfig[1]);
+		
 		//Se configura el modo de ganancia con el valor basicConfig[2].
 		LEP_SetGainMode(basicConfig[2]);	
+		
 		//Se establece el valor del obturador utilizando basicConfig[3].
 		LEP_SetShutter(basicConfig[3]);
+		
 //Se obtiene el valor de emisividad desde el campo de texto emiBox y se convierte en un valor float.
 		emissivity=emiBox->text().toFloat();
 		//Se aplica la emisividad a la radiometría utilizando el valor obtenido.
 		LEP_SetEmissivity(Radiometry, emissivity);
-
 
 //El valor máximo de temperatura se actualiza dependiendo del valor de basicConfig[0]
 //Si es 0, se multiplica el valor de Temp[1] por 10.
@@ -697,7 +699,7 @@ else if(basicConfig[0]== 1) tempMax->setText("Temp\n max:\n"+QString::number(Tem
 // Actualiza la configuración del formato asignando el índice seleccionado a basicConfig[0]
 	QObject::connect(formOut, QOverload<int>::of(&QComboBox::currentIndexChanged), [&](int index) {
 		basicConfig[0]=index;
-// Si el índice seleccionado es 0 o 1, se configura el agcFormat (formato AGC) en el índice 2.
+// Si el índice seleccionado es 0 o 1, se configura el agcFormat en el índice 2.
 		if(index<=1) agcFormat->setCurrentIndex(2);
 		// Si el índice es mayor a 1, se configura agcFormat en el índice 0. 
 		else agcFormat->setCurrentIndex(0);
@@ -709,12 +711,12 @@ else if(basicConfig[0]== 1) tempMax->setText("Temp\n max:\n"+QString::number(Tem
 		if(index!=2)formOut->setCurrentIndex(2);
     });
 
-// Conecta el cambio de índice en Gain (ganancia) al evento de cambio de índice en el obturador.
+// Conecta el cambio de índice en Gain al evento de cambio de índice en el obturador.
 	QObject::connect(Gain, QOverload<int>::of(&QComboBox::currentIndexChanged), [&](int index) {
 		basicConfig[2]=index;
     });
   
-// Conecta el cambio de índice en el menú Shutter (obturador) a una función lambda.
+// Conecta el cambio de índice en el menú Shutter a una función lambda.
 	QObject::connect(Shutter, QOverload<int>::of(&QComboBox::currentIndexChanged), [&](int index) {
 		basicConfig[3]=index;
     });
@@ -727,7 +729,7 @@ else if(basicConfig[0]== 1) tempMax->setText("Temp\n max:\n"+QString::number(Tem
 //////////////////////////Advanced Cconfig window///////////////////////
 	//Se crea un widget  para Gain
     QWidget *gainTab = new QWidget(advConfigWidget);
-    //Se crea un widget  para Gain
+    //Se crea un widget para la emisividad
     QWidget *emissivityTab = new QWidget(advConfigWidget);
 //Se crea un widget  para AGC
     QWidget *agcTab = new QWidget(advConfigWidget);
