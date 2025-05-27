@@ -744,7 +744,7 @@ else if(basicConfig[0]== 1) tempMax->setText("Temp\n max:\n"+QString::number(Tem
 
 	//Se crea un layout de tipo grid (rejilla) para organizar los widgets dentro de la pestaña gainTab. Este layout posiciona los widgets en una cuadrícula.
     QGridLayout *layout_GAIN = new QGridLayout(gainTab);
-	// Se están creando dos vectores (QVector), uno para almacenar objetos QLineEdit y otro para etiquetas (QLabel). 
+	// Se crean dos vectores (QVector), uno para almacenar objetos QLineEdit y otro para etiquetas (QLabel). 
     QVector<QLineEdit*> lineEdits_GAIN;
     QVector<QLabel*> labels_GAIN;
 
@@ -757,7 +757,7 @@ else if(basicConfig[0]== 1) tempMax->setText("Temp\n max:\n"+QString::number(Tem
         layout_GAIN->addWidget(label, (i % 4) * 2, i / 4 );
         layout_GAIN->addWidget(lineEdit, (i % 4) * 2 + 1, i / 4);
 
-        // Los campos de texto (QLineEdit) y las etiquetas (QLabel) se almacenan en sus   respectivos vectores para poder acceder a ellos más adelante.
+        // Los campos de texto y las etiquetas se almacenan en sus respectivos vectores para poder acceder a ellos más adelante.
         lineEdits_GAIN.append(lineEdit);
         labels_GAIN.append(label);
     }
@@ -772,7 +772,7 @@ else if(basicConfig[0]== 1) tempMax->setText("Temp\n max:\n"+QString::number(Tem
     labels_GAIN[6]->setText("H_L Threshold");
     labels_GAIN[7]->setText("H_L Poblation");     
 
-//Se asignan valores iniciales a los campos de texto (QLineEdit), basados en las propiedades del objeto gainModeObj.
+//Se asignan valores iniciales a los campos de texto, basados en las propiedades del objeto gainModeObj.
     lineEdits_GAIN[0]->setText(QString::number(gainModeObj.sysGainModeROI.startCol)); 
     lineEdits_GAIN[1]->setText(QString::number(gainModeObj.sysGainModeROI.startRow));
 lineEdits_GAIN[2]->setText(QString::number(gainModeObj.sysGainModeThresholds.sys_C_low_to_high));    lineEdits_GAIN[3]->setText(QString::number(gainModeObj.sysGainModeThresholds.sys_P_low_to_high));
@@ -783,7 +783,6 @@ lineEdits_GAIN[2]->setText(QString::number(gainModeObj.sysGainModeThresholds.sys
 //Se crean dos botones, uno para aceptar y el otro para borrar
     QPushButton *advAccept = new QPushButton("Accept");
     QPushButton *advClose = new QPushButton("Close");
-
     //Se agregan widgets a los botones y se les asigna una posición
     layout_GAIN->addWidget(advAccept, 9, 0, 2, 1); 
     layout_GAIN->addWidget(advClose, 9, 1, 2, 2); 
