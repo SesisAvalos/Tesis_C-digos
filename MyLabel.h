@@ -1,5 +1,6 @@
 #ifndef MYLABEL_H
 #define MYLABEL_H
+
 #include <QtCore>
 #include <QWidget>
 #include <QLabel>
