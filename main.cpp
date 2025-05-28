@@ -794,14 +794,15 @@ lineEdits_GAIN[2]->setText(QString::number(gainModeObj.sysGainModeThresholds.sys
 	QVector<QLineEdit*> lineEdits_Emiss;
 	QVector<QLabel*> labels_Emiss;
 
- // Se crea una etiqueta (QLabel) con el texto "Label " seguido de un número (del 1 al 8).
+ // Se crea una etiqueta con el texto "Label " seguido de un número (del 1 al 8).
     for (int i = 0; i < 8; ++i) {
 QLabel *label = new QLabel("Label " + QString::number(i + 1));
-// Se crea un campo de texto (QLineEdit) para que el usuario pueda ingresar o visualizar datos.
+// Se crea un campo de texto para que el usuario pueda ingresar o visualizar datos.
         QLineEdit *lineEdit = new QLineEdit;
         // Se crea un campo de texto (QLineEdit) para que el usuario pueda ingresar o visualizar datos.
         layout_Emiss->addWidget(label, (i % 4) * 2, i / 4 );
         layout_Emiss->addWidget(lineEdit, (i % 4) * 2 + 1, i / 4);
+	    
 // Coloca el campo de texto justo debajo de su correspondiente etiqueta.
         lineEdits_Emiss.append(lineEdit);
 	labels_Emiss.append(label);
@@ -827,14 +828,12 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
     lineEdits_Emiss[6]->setText(QString::number(Radiometry.TWindowK/100.0));
     lineEdits_Emiss[7]->setText(QString::number(Radiometry.TReflK/100.0)); 
     
-    //Se crean dos botones, uno para aceptar cambios (advAccept1) y otro para cerrar la ventana o pestaña (advClose1).
+    //Se crean dos botones, uno para aceptar cambios y otro para cerrar la ventana o pestaña.
     QPushButton *advAccept1 = new QPushButton("Accept");
     QPushButton *advClose1 = new QPushButton("Close");
-
    //Se le asigna poscición a los botones creados
     layout_Emiss->addWidget(advAccept1, 9, 0, 2, 1); // Span 4 columns
     layout_Emiss->addWidget(advClose1, 9, 1, 2, 1); // Span 4 columns
-
 
 ////////////////////////////// AGC tab///////////////////////////
 
@@ -859,7 +858,6 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
         lineEdits_ACG.append(lineEdit);
 	labels_AGC.append(label);
     }
-
     // Cambia los textos de las etiquetas creadas
     labels_AGC[0]->setText("Start Column");
     labels_AGC[1]->setText("Start Row");
@@ -869,7 +867,7 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
     labels_AGC[5]->setText("End Row");
     labels_AGC[6]->setText("Linear Percent");
    
-    // Establece valores iniciales en los campos de texto con datos extraídos de un objeto llamado agcROI (Region of Interest para AGC) 
+    // Establece valores iniciales en los campos de texto con datos extraídos de un objeto llamado agcROI 
     lineEdits_ACG[0]->setText(QString::number(agcROI.startCol)); 
     lineEdits_ACG[1]->setText(QString::number(agcROI.startRow));
     lineEdits_ACG[2]->setText(QString::number(agcHeqClipLimitHigh));
@@ -877,14 +875,15 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
     lineEdits_ACG[4]->setText(QString::number(agcROI.endCol));
     lineEdits_ACG[5]->setText(QString::number(agcROI.endRow));
     lineEdits_ACG[6]->setText(QString::number(agcHeqLinearPercent));
-
    //Se crean dos botones y se les asigna una posición
     QPushButton *advAccept2 = new QPushButton("Accept");
     QPushButton *advClose2 = new QPushButton("Close");
     layout_AGC->addWidget(advAccept2, 9, 0, 2, 1);
     layout_AGC->addWidget(advClose2, 9, 1, 2, 1); 
 
+	
 ///////////////////////link action adv Config///////////////////////////
+	
 //Esta línea conecta el evento clicked del botón advAccept a una función lambda 
 	QObject::connect(advAccept, &QPushButton::clicked, [&lineEdits_GAIN,&lineEdits_Emiss,&lineEdits_ACG]{
 
@@ -895,9 +894,9 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		gainModeObj.sysGainModeROI.endRow = lineEdits_GAIN[5]->text().toUInt();
 		gainModeObj.sysGainModeThresholds.sys_C_high_to_low = lineEdits_GAIN[6]->text().toUInt();
 		gainModeObj.sysGainModeThresholds.sys_P_high_to_low = lineEdits_GAIN[7]->text().toUInt();
-//Convierte el valor de lineEdits_GAIN[6] a un valor flotante, lo convierte a grados Kelvin sumando 273, y lo asigna a sys_T_high_to_low.
+//Convierte el valor de lineEdits_GAIN[6] a un valor flotante, lo convierte a grados Kelvin.
 		gainModeObj.sysGainModeThresholds.sys_T_high_to_low = lineEdits_GAIN[6]->text().toFloat() + 273;
-//Convierte el valor de lineEdits_GAIN[2] a flotante y lo convierte a Kelvin, asignándolo a sys_T_low_to_high.
+//Convierte el valor de lineEdits_GAIN[2] a flotante y lo convierte a Kelvin.
 		gainModeObj.sysGainModeThresholds.sys_T_low_to_high = lineEdits_GAIN[2]->text().toFloat() + 273;
 //Llama a la función LEP_SetGainConfig para configurar la ganancia con el objeto gainModeObj.
 		LEP_SetGainConfig(gainModeObj);
@@ -914,6 +913,7 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 // Llama a la función LEP_SetRadParms para configurar los parámetros radiométricos con el objeto Radiometry
 		LEP_SetRadParms(Radiometry);
 
+	
 		//Se establecen AGC
 		agcROI.startCol = lineEdits_ACG[0]->text().toUInt();
 		agcROI.startRow =lineEdits_ACG[1]->text().toUInt();
@@ -961,7 +961,7 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		ROI.fill(Qt::transparent);
 //Se crea un objeto QPainter que permite dibujar sobre la imagen ROI.
 		QPainter painter(&ROI);
-//Configura el lápiz de dibujo (pen) para que el color sea negro y el grosor de las líneas sea de 3 píxeles.
+//Configura el lápiz de dibujo para que el color sea negro y el grosor de las líneas sea de 3 píxeles.
 		painter.setPen(QPen(Qt::black,3));
 //Se definen las coordenadas ajustanto la escala
 		int x1 = 69*4;
@@ -985,18 +985,22 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		myLabel1.setGeometry(10, 10, 330*2, 240*2);
 // Convierte la imagen ROI en un QPixmap y lo asigna a la etiqueta myLabel1 para mostrarla en la interfaz.
 		myLabel1.setPixmap(QPixmap::fromImage(ROI));
+
 		// Declara un array de enteros de tamaño 8 para almacenar coordenadas o valores relacionados con el bounding box.
 		int array[8];
 		for(int i=0;i<8;i++){array[i]=0;}
 		int buff=0;
+
 // Conecta el evento timeout del temporizador AI_timer a una función lambda que se ejecutará cada vez que el temporizador expire.
 	QObject::connect(AI_timer,  &QTimer::timeout, [&](){
+		
 		// Define la ruta del archivo CSV 
 		QString csvFilePath = "/home/Thermal_Camera/output.csv";
+		
 		//Se maneja la lectura del archivo output.csv.
 		QFile fileBBox(csvFilePath);
 		if (!fileBBox.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		//qDebug() << "Error: Unable to open the file for reading.";
+		    qDebug() << "Error: Unable to open the file for reading.";
 		}
 
 		//Crea un objeto que se usará para leer el contenido del archivo
@@ -1008,7 +1012,7 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		while (!in.atEnd()) {
 		//Lee una línea completa del archivo CSV y la almacena en la variable line.
 			line = in.readLine();
-// Divide la línea en una lista de cadenas (QStringList) utilizando los espacios como separadores.
+// Divide la línea en una lista de cadenas utilizando los espacios como separadores.
 			QStringList numbersList = line.split(" ");
 
 			for (const QString& number : numbersList) {
@@ -1016,7 +1020,6 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 				buff++;
 			}
 		}
-
 //Cierra el archivo CSV que se abrió previamente para la lectura
 fileBBox.close();
 		thread->setBBox(array);
@@ -1029,11 +1032,11 @@ fileBBox.close();
 //Se crea un objeto QPainter para poder dibujar sobre la imagen ROI.
 		QPainter painter(&ROI);
 //Configura el lápiz de dibujo para usar un color blanco y un grosor de 3 píxeles para las líneas que se dibujarán.
-		painter.setPen(QPen(Qt::white,3))
-		//Inicia un ciclo for que recorre el array 
+		painter.setPen(QPen(Qt::white,3)) 
 for( int i=0;i<8;i+=4)
 // Dibuja un rectángulo en la imagen ROI. Las coordenadas x e y se escalan por 4
 {painter.drawRect(array[i]*4,array[i+1]*4,(array[i+2]-array[i])*4,(array[i+3]-array[i+1])*4);}
+		
 		// Termina el proceso de dibujo 
 		painter.end();
 // Convierte la imagen ROI en un QPixmap y la asigna a la etiqueta myLabel1, actualizando la interfaz gráfica con el nuevo contenido del ROI.
@@ -1049,13 +1052,16 @@ for( int i=0;i<8;i+=4)
 
 	//Configura el modo de ganancia de la cámara térmica a 0.
 	LEP_SetGainMode(0);	
+
 	//Configura el obturador (shutter) de la cámara
 	LEP_SetShutter(0);
+
 //Inicia el hilo thread
 	thread->start();
 //Inicia otro hilo, file
 	file->start();
-//Muestra la ventana principal (myWidget) en la interfaz gráfica
+//Muestra la ventana principal en la interfaz gráfica
 	myWidget->show();
+
 	return a.exec();
 }
