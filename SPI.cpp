@@ -2,7 +2,7 @@
 //Se agrega SPI.h
 #include "SPI.h"
 
-//Se le agregan valores a las variables declaradas en spi.h
+//Se le agregan valores a las variables declaradas en SPI.h
 int spi_cs0_fd = -1;
 int spi_cs1_fd = -1;
 
