@@ -3,7 +3,7 @@
 #Este codigo transforma un archivo .pt a .onnx
 
 #Se importan las bibliotecas que ayudan a la transformacion de datasets 
-#SE importa YOLO y se verifica si el entorno esta correctamente configurado
+#Se importa YOLO y se verifica si el entorno esta correctamente configurado
 import torch
 import torchvision
 import ultralytics
