@@ -1,4 +1,15 @@
+/*
+ * Copyright (c) 2007 MontaVista Software, Inc.
+ * Copyright (c) 2007 Anton Vorontsov <avorontsov@ru.mvista.com>
+  */
+
 //Se incluyen todas las librerías necesarias
+#ifndef SPI_H
+#define SPI_H
+
+#include <string>
+#include <stdint.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
