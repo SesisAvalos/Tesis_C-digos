@@ -21,11 +21,10 @@ void LEP_Connect();
 void LEP_PerformFFC();
 
 //PARA Get Config
-// Obtiene los parámetros radiométricos (como los relacionados con la temperatura).
+// Obtiene los parámetros radiométricos.
 void LEP_GetRadParms(LEP_RAD_FLUX_LINEAR_PARAMS_T_PTR Radiometry);
 // Obtiene la configuración actual del modo de ganancia de la cámara.
 void LEP_GetGainConfig(LEP_SYS_GAIN_MODE_OBJ_T_PTR gainModeObj);
-
 // Obtiene la configuración de control automático de ganancia (AGC)
 void LEP_GetAGCConfig(LEP_AGC_ROI_T_PTR agcROI, LEP_UINT16 
 *agcHeqClipLimitHigh, LEP_UINT16 *agcHeqDampingFactor, LEP_UINT16 *agcHeqLinearPercent);
@@ -53,7 +52,7 @@ void LEP_SetAGCConfig(LEP_AGC_ROI_T agcROI, LEP_UINT16 agcHeqClipLimitHigh, LEP_
 // Reinicia la cámara Lepton.
 void LEP_Reboot();
 
-// Finaliza la definición del encabezado (#ifndef LEPTON_CONFIG).
+// Finaliza la definición del encabezado.
 #endif
 
 
