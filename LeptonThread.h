@@ -22,7 +22,7 @@
 //Se manda a llamar a LEPTON_CONFIG.h
 #include "LEPTON_CONFIG.h"
 
-//Se definen varias constantes relacionadas con el tamaño de los paquetes de datos:
+//Se definen varias constantes relacionadas con el tamaño de los paquetes de datos
 #define PACKET_SIZE 164
 #define PACKET_SIZE_UINT16 (PACKET_SIZE/2)
 #define PACKETS_PER_FRAME 60
@@ -92,9 +92,7 @@ private:
   QImage myImage;
   QString Name;
   bool video;
-
-
-//Se declaran las variables de procesamiento de datos, almacenan regiones de interés y estadísticas de temperatitura
+//Se declaran las variables de procesamiento de datos, almacenan regiones de interés y estadísticas de temperatura
   void saveImageROI(QString);
   LEP_SYS_VIDEO_ROI_T ROI;
   LEP_RAD_ROI_T ROI_1;
