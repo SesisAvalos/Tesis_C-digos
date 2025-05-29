@@ -4,6 +4,7 @@
 #include "LeptonThread.h"
 //Se incluye Palettes.h
 #include "Palettes.h"
+//Se inckuye SPI.h
 #include "SPI.h"
 //Se incluye LEPTON_CONFIG.h
 #include "LEPTON_CONFIG.h"
@@ -136,6 +137,7 @@ void LeptonThread::useRangeMinValue(uint16_t newMinValue)
 	else if(Raw16) rangeMin = (newMinValue/10+273.15)*100;
 	else rangeMin = newMinValue/10*255/140;
 }
+
 //Se establece un rango maximo dependiendo del valor de salida
 void LeptonThread::useRangeMaxValue(uint16_t newMaxValue)
 {	autoRangeMax = false;
@@ -144,7 +146,7 @@ void LeptonThread::useRangeMaxValue(uint16_t newMaxValue)
 	else rangeMax = newMaxValue/10*255/140;
 }
 
-//Esta funcion se encarga de la toma de imagenes cronometrada, se encarga de guarda las imagenes en una direccion especifica y crea las carpetas necesarias
+//Esta funcion se encarga de la toma de imagenes cronometrada, se encarga de guardar las imagenes en una direccion especifica y crea las carpetas necesarias
 bool LeptonThread::Datos(QString newName, uint16_t newFrame, uint16_t newTime)
 {
 	if(newName.isEmpty()) return false;
@@ -164,7 +166,7 @@ bool LeptonThread::Datos(QString newName, uint16_t newFrame, uint16_t newTime)
 		return true;}
 }
 
-//Se define la región de interés en la cámara ttermográfica, esto lo hace tomando 4 valores que son asignados a las estructuras ROI y ROI1
+//Se define la región de interés en la cámara termográfica, esto lo hace tomando 4 valores que son asignados a las estructuras ROI y ROI1
 void LeptonThread::Set_NROI(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2){
 		ROI.startCol=x1;
 		ROI.endCol=x2;
@@ -398,6 +400,7 @@ void LeptonThread::setBBox(int Temp_BBox[8]){
 	for(int i=0; i<8; i++){
 		array[i]=Temp_BBox[i];}
 }
+
 void LeptonThread::saveImage(QString Dir){
 		now = QDateTime::currentDateTime();
 		timestamp = now.toString(QLatin1String("yyyyMMdd-hhmmss-zzz"));
@@ -415,8 +418,8 @@ void LeptonThread::saveImage(QString Dir){
 		myImage.save(fileName);	
 }
 
-/* Esta función es intercambiable con la función anterior y solo añade los valores de ROI al nombre.
-* Esta función es diferente porque obtener los valores de ROI añade demasiado retraso y provoca retardo en el vídeo en tiempo real.*/
+//Esta función es intercambiable con la función anterior y solo añade los valores de ROI al nombre.
+//Esta función es diferente porque obtener los valores de ROI añade demasiado retraso y provoca retardo en el vídeo en tiempo real.
 void LeptonThread::saveImageROI(QString Dir){
 		LEP_ROIStatistics(&ROI_Stats,&ROI_Stats_1);
 		now = QDateTime::currentDateTime();
