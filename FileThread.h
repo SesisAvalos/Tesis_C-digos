@@ -1,4 +1,3 @@
-//Se realiza un inclue guard, evita que la cabecera se incluya más de una vez
 #ifndef TXTTHREAD
 #define TXTTHREAD
 
