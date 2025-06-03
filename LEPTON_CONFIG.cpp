@@ -90,8 +90,7 @@ void LEP_SetOutputFormat(int option){
 			EnableState_TLinear = LEP_RAD_DISABLE;
 
 			LEP_VID_FOCUS_CALC_ENABLE_E vidFocusCalcEnableState =
-
-//Se desactiva el cálculo de enfoque automático 											LEP_VID_FOCUS_CALC_DISABLE;
+					    LEP_VID_FOCUS_CALC_DISABLE;
 			LEP_SetVidFocusCalcEnableState( &_port,
                                             vidFocusCalcEnableState);
             
