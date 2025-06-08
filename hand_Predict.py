@@ -1,7 +1,5 @@
 # -- coding: utf-8 --
 """
-Created on Wed Nov 22 17:48:55 2023
-
 @author: cdmor
 """
 import numpy as np
@@ -60,7 +58,7 @@ for result in results:
 
 # Mostrar las clases y cajas detectadas
 if detections:
-    print("\n📌 *Objetos detectados:*")
+    print("\n*Objetos detectados:*")
     for cls, box in detections:
         print(f"Clase: {cls} - Coordenadas: {box}")
 else:
