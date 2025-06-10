@@ -987,9 +987,9 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		myLabel1.setPixmap(QPixmap::fromImage(ROI));
 
 		// Declara un array de enteros de tamaño 8 para almacenar coordenadas o valores relacionados con el bounding box.
-		int array[8];
-		for(int i=0;i<8;i++){array[i]=0;}
-		int buff=0;
+		//int array[8];
+		//for(int i=0;i<8;i++){array[i]=0;}
+		//int buff=0;
 
 // Conecta el evento timeout del temporizador AI_timer a una función lambda que se ejecutará cada vez que el temporizador expire.
 	QObject::connect(AI_timer,  &QTimer::timeout, [&](){
@@ -1007,8 +1007,9 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		QTextStream in(&fileBBox);
 //Se almacenará cada línea del archivo CSV mientras se lee.
 		QString line;
-		for(int i=0;i<8;i++){array[i]=0;}
+		for(int i=0;i<8;i++){array[ i]=0;}
 		buff=0;
+		
 		while (!in.atEnd()) {
 		//Lee una línea completa del archivo CSV y la almacena en la variable line.
 			line = in.readLine();
