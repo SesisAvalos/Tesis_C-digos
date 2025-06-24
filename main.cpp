@@ -951,26 +951,24 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		advConfigWidget->close();
 	});	
 
-
-	// ROI
-// Declara una variable llamada ROI que almacenará la imagen que representa el área de interés
+// ROI
+	// Delara una variable llamada ROI que almacenara la imagen que representa el area de interes
 		QImage ROI;
-//Crea una imagen de 640x480 píxeles en formato ARGB32, lo que significa que la imagen admite transparencia y colores en 32 bits.
+		//Crea una imagen de 640x480 pixeles en formato ARGB32, lo que significa que la imagen admite transparencia y colores en 32 bits.
 		ROI = QImage(320*2, 240*2, QImage::Format_ARGB32);
-//Llena la imagen ROI con un color transparente para que tenga un fondo sin color.
+		//Llena la imagen ROI con un color transparente para que tenga un fondo sin color.
 		ROI.fill(Qt::transparent);
-//Se crea un objeto QPainter que permite dibujar sobre la imagen ROI.
+		//Se crea un objeto QPainter que permite dibujar sobre la imagen ROI.
 		QPainter painter(&ROI);
-//Configura el lápiz de dibujo para que el color sea negro y el grosor de las líneas sea de 3 píxeles.
+		//Configura el lapiz de dibujo para que el color sea negro y el grosor de las lineas sea de 3 pixeles.
 		painter.setPen(QPen(Qt::black,3));
-//Se definen las coordenadas ajustanto la escala
 		int x1 = 69*4;
 		int y1 = 49*4;
 		int x2 = 89*4;
 		int y2 = 69*4;
 
-		//Dibuja 4 líneas formando un rectángulo
-		//Esa imagen se posiciona en la posición (0,0)
+		//Dibuja 4 lineas formando un rectangulo
+		//Esa imagen se posiciona en la posicion (0,0)
 		painter.drawLine(x1, y1, x2, y1);
 		painter.drawLine(x1, y1, x1, y2);
 		painter.drawLine(x1, y2, x2, y2);
@@ -978,91 +976,97 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		painter.drawImage(0,0,ROI);
 		//Termina el proceso de dibujo
 		painter.end();
-
-//Crea un objeto que mostrará la imagen en la interfaz
+		//Crea un objeto que mostrara la imagen en la interfaz
 		QLabel myLabel1(myWidget);
-		//Define la geometría (posición y tamaño) 
+		//Define geometria (posicion y tamanno)
 		myLabel1.setGeometry(10, 10, 330*2, 240*2);
-// Convierte la imagen ROI en un QPixmap y lo asigna a la etiqueta myLabel1 para mostrarla en la interfaz.
+		// Convierte la imagen ROI en un QPixmap y lo asigna a la etiqueta myLabel1 para mostrarla en la interfaz. 
 		myLabel1.setPixmap(QPixmap::fromImage(ROI));
-
-		// Declara un array de enteros de tamaño 8 para almacenar coordenadas o valores relacionados con el bounding box.
-		//int array[8];
-		//for(int i=0;i<8;i++){array[i]=0;}
-		//int buff=0;
-
-// Conecta el evento timeout del temporizador AI_timer a una función lambda que se ejecutará cada vez que el temporizador expire.
+    
+	//Conecta el evento timeout del temporizador AI_timer a una funcion lambda que se ejecutara cada vez que el temporizador expire.
 	QObject::connect(AI_timer,  &QTimer::timeout, [&](){
-		
-		// Define la ruta del archivo CSV 
+			
+		// Define la ruta del archivo CSV
 		QString csvFilePath = "/home/Thermal_Camera/output.csv";
+		
+		int array[64]; //acepta 16 bounding boxes
+		int buff = 0;
 		
 		//Se maneja la lectura del archivo output.csv.
 		QFile fileBBox(csvFilePath);
 		if (!fileBBox.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		    qDebug() << "Error: Unable to open the file for reading.";
+			qDebug() << "Error: Unable to open the file for reading.";
 		}
 
-		//Crea un objeto que se usará para leer el contenido del archivo
+		   //Crea un objeto que se usara para leer el contenido del archivo
 		QTextStream in(&fileBBox);
-//Se almacenará cada línea del archivo CSV mientras se lee.
+		//Se almacenara cada linea del archivo CSV mientras se lee.
 		QString line;
-		for(int i=0;i<8;i++){array[ i]=0;}
-		buff=0;
 		
+		// Read and output each line of the file
 		while (!in.atEnd()) {
-		//Lee una línea completa del archivo CSV y la almacena en la variable line.
+			//Lee una linea completa edl archio CSV y la almacena en la variable line.
 			line = in.readLine();
-// Divide la línea en una lista de cadenas utilizando los espacios como separadores.
+			 // Divide la linea en una lista de cadenas utilizando los espacios como separadores.
 			QStringList numbersList = line.split(" ");
-
 			for (const QString& number : numbersList) {
-				array[buff]=number.toInt();
-				buff++;
+				//qDebug() << number.toInt();
+				//array[buff]=number.toInt();
+				//qDebug()<<array[buff];
+				//buff++;
+				if (buff < 64) {
+					array[buff++] = number.toInt();
+				}
 			}
 		}
-//Cierra el archivo CSV que se abrió previamente para la lectura
-fileBBox.close();
-		thread->setBBox(array);
-//Declara una variable QImage para crear la nueva imagen donde se dibujará el área de interés (ROI)
+	
+		//Cierra el archivo CSV  que se abrio previamente para la lectura
+		fileBBox.close();
+		int box_count = buff / 4;
+		thread->setBBox(array, box_count);
+		//Declara una variable QImage para crear la nueva imagen donde se dibujara el area de interes (ROI)
 		QImage ROI;
-//Crea una imagen de tamaño 640x480 píxeles con formato ARGB32, que admite transparencia y color de 32 bits.
+		//Crea una imagen de tamanno 640x480 pixeles con formato ARGB32, que admite transparencia y color de 32 bits.
 		ROI = QImage(320*2, 240*2, QImage::Format_ARGB32);
-//Llena la imagen con un color transparente para que el fondo no tenga color.
+		//Llena la imagen con un color transparente para que el fondo no tenga color.
 		ROI.fill(Qt::transparent);
-//Se crea un objeto QPainter para poder dibujar sobre la imagen ROI.
+		//Se crea un objeto QPainter para poder dibujar sobre la imagen ROI.
 		QPainter painter(&ROI);
-//Configura el lápiz de dibujo para usar un color blanco y un grosor de 3 píxeles para las líneas que se dibujarán.
-		painter.setPen(QPen(Qt::white,3)) 
-for( int i=0;i<8;i+=4)
-// Dibuja un rectángulo en la imagen ROI. Las coordenadas x e y se escalan por 4
-{painter.drawRect(array[i]*4,array[i+1]*4,(array[i+2]-array[i])*4,(array[i+3]-array[i+1])*4);}
+		//COnfigura el lapiz de dibujo para usar un color blanco y un grosor de 3 pixeles para las lineas que se dibujaran.
+		painter.setPen(QPen(Qt::white,3));
 		
-		// Termina el proceso de dibujo 
+		for( int i=0;i<buff;i+=4){
+			//Dibuja un rectangulo en la imagen ROI. Las coordenadas x e y se escalan por 4
+			painter.drawRect(array[i]*4,array[i+1]*4,(array[i+2]-array[i])*4,(array[i+3]-array[i+1])*4);
+			}
+
+		// Termina el proceso de dibujo
 		painter.end();
-// Convierte la imagen ROI en un QPixmap y la asigna a la etiqueta myLabel1, actualizando la interfaz gráfica con el nuevo contenido del ROI.
+		// Convierte la imagen ROI en un QPixmap y la asigna a la etiqueta myLabel1, actualizando la interfaz grafica con el nuevo conteniido del ROI.
 		myLabel1.setPixmap(QPixmap::fromImage(ROI));
-	});	
-
-
+		thread->Set_NROI(x1/4,x2/4,y1/4,y2/4);
+	});		
+	
+	
 ////////////////////////// init congig ////////////// //////////////////
-	//Configura el formato de salida de la cámara térmica.
+	//Configura el formato de salida de la camara termica.
 	LEP_SetOutputFormat(0);
-	//Establece el formato de salida en el hilo thread, usando el mismo formato configurado en la cámara térmica (valor 0).
+	//Establece el formato de salida en el hilo thread, usando el mismo formato configurado en la camara termica (valor 0).
 	thread->useOutputFormat(0);
-
-	//Configura el modo de ganancia de la cámara térmica a 0.
+			
+	//Configura el modo de ganancia de la camara termica a 0.
 	LEP_SetGainMode(0);	
-
-	//Configura el obturador (shutter) de la cámara
+		
+	//Configura el obturador de la camara
 	LEP_SetShutter(0);
 
-//Inicia el hilo thread
+	//Inicia el hlo thread
 	thread->start();
-//Inicia otro hilo, file
+	//Inicia otro hilo, file
 	file->start();
-//Muestra la ventana principal en la interfaz gráfica
-	myWidget->show();
+	//Muestra la ventana principl en la interfaz grafica
 
+	myWidget->show();
+	
 	return a.exec();
 }
