@@ -31,14 +31,20 @@ while True:
               results = model.predict(image_rgb, 
                         save=False, 
                         imgsz=160,  # Puede ser un solo número
-                        conf=0.5, 
+                        conf=0.3,
+                        #iou=0.3, 
                         device=device1)
+              
+              #for i in results:
+              #        print("Boxes: ", r.boxes.xyxy)
+              #        print("Confianzas: ", r.boxes.conf)
+              
               boxes=[]
               for result in results:
                      boxes.append(result.cpu().numpy().boxes.xyxy)
                      print(boxes)
                      
-              print("Si no hay caja entonces se escrben ceros, y si si hay se escriben las coordenadas en output.csv")
+              #print("Si no hay caja entonces se escrben ceros, y si si hay se escriben las coordenadas en output.csv")
               with open('/home/Thermal_Camera/output.csv','w') as f:
                       any_box = False
                       for box in boxes:
@@ -47,7 +53,7 @@ while True:
                                       for i in box:
                                               temp = [round(num) for num in i]
                                               print(*temp, file=f)
-                                              print(*temp)
+                                              #print(*temp)
                       if not any_box:
                                temp = (0,0,0,0)
                                print(*temp,file=f)
