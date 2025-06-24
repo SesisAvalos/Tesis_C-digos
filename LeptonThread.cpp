@@ -4,12 +4,12 @@
 #include "LeptonThread.h"
 //Se incluye Palettes.h
 #include "Palettes.h"
-//Se inckuye SPI.h
+//Se incluye SPI.h
 #include "SPI.h"
 //Se incluye LEPTON_CONFIG.h
 #include "LEPTON_CONFIG.h"
 
-//Se definen las variables globales necesarias para la decodificación de video
+//Se definen las variables globales necesarias para la decodificacion de video
 #define PACKET_SIZE 164
 #define PACKET_SIZE_UINT16 (PACKET_SIZE/2)
 #define PACKETS_PER_FRAME 60
@@ -17,7 +17,7 @@
 #define FPS 27;
 int x=100;
 
-//Se agregan las variables globales para el nombramiento de las imágenes
+//Se agregan las variables globales para el nombramiento de las imagenes
 QDateTime now;
 QString timestamp;
 QString fileName;
@@ -27,16 +27,16 @@ LeptonThread::LeptonThread() : QThread()
 {
 	loglevel = 0;
 
-	//De la opción 3 (ironblack) se obtiene el tamaño de este mapa de colores
+	//De la opcion 3 (ironblack) se obtiene el tamanno de este mapa de colores
 	typeColormap = 3; // 1:colormap_rainbow  /  2:colormap_grayscale  /  3:colormap_ironblack(default)
 	selectedColormap = colormap_ironblack;
 	selectedColormapSize = get_size_colormap_ironblack();
 
 	typeLepton = 2; // 2:Lepton 2.x  / 3:Lepton 3.x
-	myImageWidth = 80;	//Define el tamaño de la imagen
-	myImageHeight = 60; //Define el tamaño de la imagen
+	myImageWidth = 80; //Define el tammano de la imagen
+	myImageHeight = 60; //Define el tamanno de la imagen
 
-	spiSpeed = 20 * 1000 * 1000; 
+	spiSpeed = 20 * 1000 * 1000; // SPI bus speed 20MHz
 
 	//Se configura el rango de temperatura
 	autoRangeMin = true;
@@ -51,14 +51,14 @@ LeptonThread::LeptonThread() : QThread()
 LeptonThread::~LeptonThread() {
 }
 
-//Se crea el método setLogLevel
+//Se crea el metodo setLogLevel
 void LeptonThread::setLogLevel(uint16_t newLoglevel)
 {
 	loglevel = newLoglevel;
 }
 
-//Se crea el método Colormap
-//Aquí se realiza el cambio de mapa de colores en la imagen térmica
+//Se crea el metodo Colormap
+//Aqui se realiza el cambio de mapa de colores en la imagen termica
 void LeptonThread::useColormap(int newTypeColormap)
 {
 	switch (newTypeColormap) {
@@ -95,20 +95,20 @@ void LeptonThread::useLepton(int newTypeLepton)
 	}
 }
 
-//Se define una funcion que ajusta la velocidad de Serial Peripherial Interface (SPI), se transforma de MHz a Hz
+//Se define una funcion que ajusta la velocidad de Serial Peripheral Interface (SPI), se transforma de MHz a Hz
 void LeptonThread::useSpiSpeedMhz(unsigned int newSpiSpeed)
 {
 	spiSpeed = newSpiSpeed * 1000 * 1000;
 }
 
-//Se define una funcion que establece los valores del rango de escala automatica (minimo y maximo)
+//Se deine una funcion que establece los valores del rago de escala automatica (minimo y maximo)
 void LeptonThread::setAutomaticScalingRange()
 {
 	autoRangeMin = true;
 	autoRangeMax = true;
 }
 
-//Se define una funcion que configura la salida de imagenes, se permite elegir entre diferentes configuraciones de bits 
+//Se define una funcion que configura la salida de imagenes, se permite elegir entre diferentes configuraciones de bits
 void LeptonThread::useOutputFormat(uint8_t format)
 {
 	switch(format){
@@ -146,7 +146,7 @@ void LeptonThread::useRangeMaxValue(uint16_t newMaxValue)
 	else rangeMax = newMaxValue/10*255/140;
 }
 
-//Esta funcion se encarga de la toma de imagenes cronometrada, se encarga de guardar las imagenes en una direccion especifica y crea las carpetas necesarias
+//Esta funcion se encarga de la toma de imagenes cronometrada, se encarga de guardar las iamgenes en una direccion especifica y crea las carpetas necesarias
 bool LeptonThread::Datos(QString newName, uint16_t newFrame, uint16_t newTime)
 {
 	if(newName.isEmpty()) return false;
@@ -166,7 +166,7 @@ bool LeptonThread::Datos(QString newName, uint16_t newFrame, uint16_t newTime)
 		return true;}
 }
 
-//Se define la región de interés en la cámara termográfica, esto lo hace tomando 4 valores que son asignados a las estructuras ROI y ROI1
+//Se define la region de interes en la camara termigraica, esto lo hace tomando 4 valores que son asignados a las estructuras ROI y ROI1
 void LeptonThread::Set_NROI(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2){
 		ROI.startCol=x1;
 		ROI.endCol=x2;
@@ -181,7 +181,7 @@ void LeptonThread::Set_NROI(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2){
 		LEP_SetROI(ROI,ROI_1);
 }
 
-//Se activa y desactiva la AI, esto realiza el trackeo en FLIR LEPTON
+//Se activa y desctiva la AI, esto realiza el trackeo en FLIR LEPTON
 void LeptonThread::startAI(){
 	AI=!AI;
 	if (AI) QMessageBox::information(nullptr,"Information","Tracking Started");
@@ -190,6 +190,7 @@ void LeptonThread::startAI(){
 
 void LeptonThread::run()
 {
+	//create the initial image
 	myImage = QImage(myImageWidth, myImageHeight, QImage::Format_RGB888);
 	
 	uint16_t minValue = rangeMin;
@@ -202,7 +203,7 @@ void LeptonThread::run()
 	//Se abre el puerto SPI
 	SpiOpenPort(0, spiSpeed);
 
-	// Ciclo infinito para actualizar la imagen recibida por el sensor
+	//Ciclo infinito para actualizar la imagen recibida por el sensor
 	while(true) {
 			 const int *colormap = selectedColormap;
 			 const int colormapSize = selectedColormapSize;
@@ -216,14 +217,12 @@ void LeptonThread::run()
 		int resets = 0;
 		int segmentNumber = -1;
 		for(int j=0;j<PACKETS_PER_FRAME;j++) {
-			
 			read(spi_cs0_fd, result+sizeof(uint8_t)*PACKET_SIZE*j, sizeof(uint8_t)*PACKET_SIZE);
 			int packetNumber = result[j*PACKET_SIZE+1];
 			if(packetNumber != j) {
 				j = -1;
 				resets += 1;
 				usleep(1000);
-
 				if(resets == 750) {
 					SpiClosePort(0);
 					LEP_Reboot();
@@ -350,13 +349,13 @@ void LeptonThread::run()
 		//Guarda el video
 		if(video) saveImage("Video");
 
-		//Se emite una señal para actualizar
+		//Se emite una sennal para actualizar
 		emit updateImage(myImage);
 		if (AI){
 			emit infereImage(ImageBuffer);
 		}
 		
-		//Obtiene información de la ROI		
+		//Obtiene informacion e la ROI
 	}
 	
 	//Cierra el SPI
@@ -388,17 +387,21 @@ void LeptonThread::Video() {
 }
 
 void LeptonThread::Timed() {
-	//Guarda las imágenes mientras se siguen tomando imágenes		 
+		//Guarda las imagenes mientras se siguen tomando imagenes
 		if(Frames>0){
 			 saveImage("Timed");
 			 Frames-=1;
 			 }
 }
 
-void LeptonThread::setBBox(int Temp_BBox[8]){
-	//Guarda el cuadro delimitador 
-	for(int i=0; i<8; i++){
-		array[i]=Temp_BBox[i];}
+void LeptonThread::setBBox(int Temp_BBox[], int count){
+	num_boxes = count;
+	for(int i=0;, i<count*4 && i<64; i++) {
+		array[i] = Temp_BBox[i];
+	}
+	//Guarda el cuadro delimitador
+	//for(int i=0; i<count*4; i++){
+	//	array[i]=Temp_BBox[i];}
 }
 
 void LeptonThread::saveImage(QString Dir){
@@ -408,8 +411,8 @@ void LeptonThread::saveImage(QString Dir){
 		if(AI){
 			QPainter painter(&myImage);
 			painter.setPen(QPen(Qt::white,1));
-			//Dibuja la línea
-			for( int i=0;i<8;i+=4)
+			//Dibuja la linea
+			for( int i=0;i<64;i+=4)
 			{painter.drawRect(array[i],array[i+1],(array[i+2]-array[i]),(array[i+3]-array[i+1]));}
 		
 			//Termina el trazado
@@ -418,21 +421,28 @@ void LeptonThread::saveImage(QString Dir){
 		myImage.save(fileName);	
 }
 
-//Esta función es intercambiable con la función anterior y solo añade los valores de ROI al nombre.
-//Esta función es diferente porque obtener los valores de ROI añade demasiado retraso y provoca retardo en el vídeo en tiempo real.
+//Esta funcion es intercambiable con la funion anterior y solo annade los valores de ROI al nombre,
+//Esta funcion es diferente porque obtener los valores de ROI annade demasiado retraso y provoca retardo en el video en tiempo real
 void LeptonThread::saveImageROI(QString Dir){
 		LEP_ROIStatistics(&ROI_Stats,&ROI_Stats_1);
+		
 		now = QDateTime::currentDateTime();
 		timestamp = now.toString(QLatin1String("yyyyMMdd-hhmmss-zzz"));
-		fileName = QString::fromLatin1("/home/Thermal_Camera/patients/%1/%3/%1(%4-%5)_%2.png").arg(Name).arg(timestamp).arg(Dir).
-		arg(ROI_Stats.meanIntensity).arg(ROI_Stats_1.radSpotmeterValue);
+		
+		fileName = QString::fromLatin1("/home/Thermal_Camera/patients/%1/%3/%1(%4-%5)_%2.png")
+					   .arg(Name)
+					   .arg(timestamp)
+					   .arg(Dir)
+					   .arg(ROI_Stats.meanIntensity)
+					   .arg(ROI_Stats_1.radSpotmeterValue);
+					   
 		if(AI){
 			QPainter painter(&myImage);
 			painter.setPen(QPen(Qt::white,1));
-			//Dibuja la línea
-			for( int i=0;i<8;i+=4)
+			//Dibuja la linea
+			for( int i=0;i<num_boxes*4;i+=4)
 			{painter.drawRect(array[i],array[i+1],(array[i+2]-array[i]),(array[i+3]-array[i+1]));}
-		
+			
 			//Termina el trazado
 			painter.end();
 		}
