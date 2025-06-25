@@ -30,7 +30,8 @@ while True:
               
               results = model.predict(image_rgb, 
                         save=False, 
-                        imgsz=160,  # Puede ser un solo número
+                        imgsz=160,  # Puede ser un solo número 
+                        #####CHECGAR LOS TAMAÑOS DE IMAGEN
                         conf=0.3,
                         #iou=0.3, 
                         device=device1)
@@ -42,7 +43,7 @@ while True:
               boxes=[]
               for result in results:
                      boxes.append(result.cpu().numpy().boxes.xyxy)
-                     print(boxes)
+                     #print(boxes)
                      
               #print("Si no hay caja entonces se escrben ceros, y si si hay se escriben las coordenadas en output.csv")
               with open('/home/Thermal_Camera/output.csv','w') as f:
@@ -52,12 +53,12 @@ while True:
                                       any_box = True
                                       for i in box:
                                               temp = [round(num) for num in i]
-                                              print(*temp, file=f)
+                                              #print(*temp, file=f)
                                               #print(*temp)
                       if not any_box:
                                temp = (0,0,0,0)
-                               print(*temp,file=f)
-                               print(*temp)
+                               #print(*temp,file=f)
+                               #print(*temp)
 #Se agrega una pequenna pausa ya que la inferencia es muy rapida
               time.sleep(0.1)
 #Si la carpeta AI no se encuentra termina el programa
