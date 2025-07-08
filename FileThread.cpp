@@ -14,13 +14,13 @@ void FileThread::setFile(){file.setFileName(Dir);}
 void FileThread::saveMatrix(QVector<int> tempImage){
 	if( file.open(QIODevice::WriteOnly))
 	{
-		QTextStream Stream(&file);.
+		QTextStream Stream(&file);
 		for( int i=1;i<19201; i++){
 			Stream<<tempImage[i-1];
 			if(i%160==0) Stream <<"\n";
 			else Stream<<",";
 		}
-	file.close();.
+	file.close();
 	}
 }
 
