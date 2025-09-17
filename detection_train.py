@@ -19,7 +19,7 @@ PATH=r"D:\Usuarios\SesiTesis\Tesis_SA_DATASETS3.v1i.yolov11\data.yaml" #Ruta del
 
 #Se proporcionan los parametros para el entrenamiento
 model.train(data=PATH,
-            epochs=200, #numero de epocas del entrenamiento
+            epochs=300, #numero de epocas del entrenamiento
             patience=50, #cantidad de epocas para evaluar un posible early stop en caso de que no mejore el entrenamiento despues de esa cantidad
             imgsz=256, #Image Size
             batch=16, #Tamano del lote no colocar tan grande si el imgsz es muy grande o no lograra soportar
@@ -28,4 +28,4 @@ model.train(data=PATH,
             fliplr=0.5,  # image flip left-right (probability)
             degrees=180, 
             device = 0,
-            name='Prueba_07') #CAMBIA EL NOMBRE EN CADA ENTRENAMIENTO
+            name='Prueba_11') #CAMBIA EL NOMBRE EN CADA ENTRENAMIENTO
