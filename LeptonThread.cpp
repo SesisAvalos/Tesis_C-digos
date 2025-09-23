@@ -423,7 +423,7 @@ void LeptonThread::saveImage(QString Dir){
 
 //Esta funcion es intercambiable con la funion anterior y solo annade los valores de ROI al nombre,
 //Esta funcion es diferente porque obtener los valores de ROI annade demasiado retraso y provoca retardo en el video en tiempo real
-/*void LeptonThread::saveImageROI(QString Dir){
+void LeptonThread::saveImageROI(QString Dir){
 		LEP_ROIStatistics(&ROI_Stats,&ROI_Stats_1);
 		
 		now = QDateTime::currentDateTime();
@@ -447,4 +447,4 @@ void LeptonThread::saveImage(QString Dir){
 			painter.end();
 		}
 		myImage.save(fileName);
-}*/
+}
