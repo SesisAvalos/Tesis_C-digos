@@ -396,12 +396,16 @@ void LeptonThread::Timed() {
 
 void LeptonThread::setBBox(int Temp_BBox[], int count){
 	num_boxes = count;
-	for(int i=0;, i<count*4 && i<64; i++) {
-		array[i] = Temp_BBox[i];
+	
+	const float scaleX = 80.0f / 160.0f;
+	const float scaleY - 60.0f / 160.0f;
+	
+	for(int i=0; i<count*4 && i<64; ++i) {
+		if (i % 2 == 0) //x
+			array[i] = static_cast<int>(Temp_BBox[i] * scaleX);
+		else //y
+			array[i] = static_cast<int>(Temp_BBox[i] * scaleY);
 	}
-	//Guarda el cuadro delimitador
-	//for(int i=0; i<count*4; i++){
-	//	array[i]=Temp_BBox[i];}
 }
 
 void LeptonThread::saveImage(QString Dir){
@@ -411,9 +415,35 @@ void LeptonThread::saveImage(QString Dir){
 		if(AI){
 			QPainter painter(&myImage);
 			painter.setPen(QPen(Qt::white,1));
+			
 			//Dibuja la linea
-			for( int i=0;i<64;i+=4)
-			{painter.drawRect(array[i],array[i+1],(array[i+2]-array[i]),(array[i+3]-array[i+1]));}
+			for( int i=0; i<num_boxes; ++i){
+				int idx = i*4;
+				int x1 = array[idx];
+				int y1 = array[idx + 1];
+				int x2 = array[idx + 2];
+				int y2 = array[idx + 3];
+				
+				if (x1 < 0 || x2 > 80 || y1 < 0 || y2 > 60 ||
+				    X2 <= X1 || Y2 <= Y1) {
+						qDebug() << "Bounding box invalido tras escalado" << x1 << y1 << x2 << y2;
+						continue;
+					}
+				//if (x1 < 0 || x2 > 80 || y1 < 0 || y2 > 60 || 
+				//	x2 <= x1 || y2 <= y1) {
+				//	qDebug() << "Bounding box invalido" << x1 << y1 << x2 << y2;
+				//	continue;
+					}
+			 
+			 int w = x2 - x1;
+			 int h = y2 - y1;
+			 
+			 painter.drawRect(x1, y1, w, h);
+				
+				//if (w > 0 && h > 0)
+				//	painter.drawRect(x, y, w, h);
+				//painter.drawRect(array[i],array[i+1],(array[i+2]-array[i]),(array[i+3]-array[i+1]));
+				}
 		
 			//Termina el trazado
 			painter.end();
@@ -439,12 +469,36 @@ void LeptonThread::saveImageROI(QString Dir){
 		if(AI){
 			QPainter painter(&myImage);
 			painter.setPen(QPen(Qt::white,1));
+			
 			//Dibuja la linea
-			for( int i=0;i<num_boxes*4;i+=4)
-			{painter.drawRect(array[i],array[i+1],(array[i+2]-array[i]),(array[i+3]-array[i+1]));}
+			for( int i=0; i<num_boxes; ++i){
+				int idx = i*4;
+				int x1 = array[idx];
+				int y1 = array[idx + 1];
+				int x2 = array[idx + 2];
+				int y2 = array[idx + 3];
+				
+				if (x1 < 0 || x2 > 80 || y1 < 0 || y2 > 60 ||
+				    x2 <= x1 || y2 <= y1) {
+						qDebug() << "Bounding box invalido tras escalado" << x1 << y1 << x2 << y2;
+						continue;
+						}
+				//if (x1 < 0 || x2 > 80 || y1 < 0 || y2 > 60 || 
+				//	x2 <= x1 || y2 <= y1) {
+				//	qDebug() << "Bounding box invalido" << x1 << y1 << x2 << y2;
+				//	continue;
+				//	}
+			 
+			 int w = x2 - x1;
+			 int h = y2 - y1;
+			 
+			 painter.drawRect(x1, y1, w, h);
+				//if (w > 0 && h > 0)
+				//	painter.drawRect(x, y, w, h);
+				}
 			
 			//Termina el trazado
 			painter.end();
 		}
-		myImage.save(fileName);
+		myImage.save(fileName);	
 }
