@@ -1010,10 +1010,6 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 			 // Divide la linea en una lista de cadenas utilizando los espacios como separadores.
 			QStringList numbersList = line.split(" ");
 			for (const QString& number : numbersList) {
-				//qDebug() << number.toInt();
-				//array[buff]=number.toInt();
-				//qDebug()<<array[buff];
-				//buff++;
 				if (buff < 64) {
 					array[buff++] = number.toInt();
 				}
@@ -1022,8 +1018,19 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 	
 		//Cierra el archivo CSV  que se abrio previamente para la lectura
 		fileBBox.close();
+		
 		int box_count = buff / 4;
+		
+		if (buff % 4 != 0) //Se valida que sea un multiplo de 4 exacto
+		{
+			qDebug() << "Error: Bounding boxes incmpletos en CSV";
+			return;
+		}
+		
+		if (box_count > 4) box_count = 4;
+		
 		thread->setBBox(array, box_count);
+		
 		//Declara una variable QImage para crear la nueva imagen donde se dibujara el area de interes (ROI)
 		QImage ROI;
 		//Crea una imagen de tamanno 640x480 pixeles con formato ARGB32, que admite transparencia y color de 32 bits.
@@ -1035,9 +1042,32 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		//COnfigura el lapiz de dibujo para usar un color blanco y un grosor de 3 pixeles para las lineas que se dibujaran.
 		painter.setPen(QPen(Qt::white,3));
 		
-		for( int i=0;i<buff;i+=4){
+		for( int i=0; i < box_count; i++){
+			int idx = i*4;
+			if (idx + 3 >= 64) break; //Proteccion para evitar segmentation fault
+			
+			int x1 = array[idx];
+			int y1 = array[idx + 1];
+			int x2 = array[idx + 2];
+			int y2 = array[idx + 3];
+			
+			if (x1 < 0 || x1 >= 80 || x2 < 0 || x2 > 80 ||
+			    y1 < 0 || y1 >= 60 || y2 < 0 || y2 > 60 ||
+			    x2 <= x1 || y2 <= y1) {
+					qDebug() << "Bounding box invalido" << x1 << y1 << x2 << y2;
+					continue;
+					}
+			 
+			 int w = x2 - x1;
+			 int h = y2 - y1;
+			 
+			 painter.drawRect(x1*4, y1*4, w*4, h*4);
+			 
+			//if (w > 0 && h > 0) {
+			//	painter.drawRect(x*4, y*4, w*4, h*4);
+			//}
 			//Dibuja un rectangulo en la imagen ROI. Las coordenadas x e y se escalan por 4
-			painter.drawRect(array[i]*4,array[i+1]*4,(array[i+2]-array[i])*4,(array[i+3]-array[i+1])*4);
+			//painter.drawRect(array[i]*4,array[i+1]*4,(array[i+2]-array[i])*4,(array[i+3]-array[i+1])*4);
 			}
 
 		// Termina el proceso de dibujo
@@ -1045,8 +1075,7 @@ QLabel *label = new QLabel("Label " + QString::number(i + 1));
 		// Convierte la imagen ROI en un QPixmap y la asigna a la etiqueta myLabel1, actualizando la interfaz grafica con el nuevo conteniido del ROI.
 		myLabel1.setPixmap(QPixmap::fromImage(ROI));
 		thread->Set_NROI(x1/4,x2/4,y1/4,y2/4);
-	});		
-	
+	});
 	
 ////////////////////////// init congig ////////////// //////////////////
 	//Configura el formato de salida de la camara termica.
